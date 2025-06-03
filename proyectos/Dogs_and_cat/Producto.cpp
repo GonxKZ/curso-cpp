@@ -128,23 +128,22 @@ theEnd:
 bool Producto::existe(string cod)
 {
   string linea;
-  vector<string> product;
-  bool encontrado = false;
   dbProductos.open("dbProductos.csv", ios::in);
+  if (dbProductos.fail())
+    return false;
 
-  while (!dbProductos.eof())
+  while (getline(dbProductos, linea))
   {
-    getline(dbProductos, linea);
-    product = split(linea, ',');
-    for (auto data : split(linea, ','))
+    vector<string> product = split(linea, ',');
+    if (!product.empty() && product[0] == cod)
     {
-      if (data == cod)
-        encontrado = true;
-      break;
+      dbProductos.close();
+      return true;
     }
   }
+
   dbProductos.close();
-  return encontrado;
+  return false;
 }
 
 /**
